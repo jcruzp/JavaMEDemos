@@ -33,11 +33,7 @@ import jdk.dio.gpio.GPIOPinConfig;
 
 /**
  * Interface to Ultrasound HC-SR04 device
- * Code based in book Raspberry Pi Cookbook for Python Programmers Copyright © 2014 Packt Publishing
- * Author Tim Cox (thanks for excellent book)
- * I converted sonyc.py python script at chapter 9 to Java
- *
- * @author JCruz
+ * @author Jose Cruz
  */
 public class HCSR04Device {
 
@@ -55,16 +51,16 @@ public class HCSR04Device {
      */
     public HCSR04Device(int _trigger, int _echo) {
         try {
-            // define device for trigger pin at HCSR04
+            // define device for trigger pin
             trigger = (GPIOPin) DeviceManager.open(new GPIOPinConfig(
                     0, _trigger, GPIOPinConfig.DIR_OUTPUT_ONLY, GPIOPinConfig.MODE_OUTPUT_PUSH_PULL,
-                    GPIOPinConfig.TRIGGER_NONE, false));// define device for echo pin at HCSR04
+                    GPIOPinConfig.TRIGGER_NONE, false));
+            // define device for echo pin
             echo = (GPIOPin) DeviceManager.open(new GPIOPinConfig(
                     0, _echo, GPIOPinConfig.DIR_INPUT_ONLY, GPIOPinConfig.MODE_INPUT_PULL_UP,
                     GPIOPinConfig.TRIGGER_NONE, false));
 
             I2CUtils.I2Cdelay(500);  //wait for 0.5 seconds
-
         } catch (IOException ex) {
             Logger.getGlobal().log(Level.WARNING,ex.getMessage());
         }
@@ -72,12 +68,10 @@ public class HCSR04Device {
 
     /**
      * Send a pulse to HCSR04 and compute the echo to obtain distance
-     *
      * @return distance in cm/s
      */
     public double pulse() {
         long distance = 0;
-        long delta = 0;
         try {
             trigger.setValue(true);         //Send a pulse trigger must be 1 and 0 with a 10 us wait
             I2CUtils.I2CdelayNano(0, PULSE);// wait 10 us
@@ -92,7 +86,7 @@ public class HCSR04Device {
             while ((echo.getValue()) && (stop < starttime + 1000000000L * 2)) {
                 stop = System.nanoTime();
             }
-            delta = (stop - start);
+            long delta = (stop - start);
             distance = delta * SPEEDOFSOUND;       // echo from 0 to 1 depending object distance
         } catch (IOException ex) {
             Logger.getGlobal().log(Level.WARNING,ex.getMessage());
@@ -101,8 +95,7 @@ public class HCSR04Device {
     }
 
     /**
-     * free device GPIO
-     *
+     * Free device GPIO
      */
     public void close() {
         try {
