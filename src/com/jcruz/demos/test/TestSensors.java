@@ -21,50 +21,67 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package com.jcruz.demos.test;
 
 import com.jcruz.demos.gpio.driver.DFR0076Device;
-import com.jcruz.demos.i2c.I2CUtils;
+import com.jcruz.demos.gpio.driver.HCSR501Device;
 import javax.microedition.midlet.MIDlet;
 import jdk.dio.gpio.PinEvent;
 import jdk.dio.gpio.PinListener;
 
 /**
+ * Midlet to Test all sensors connected to Raspberry Pi
  *
  * @author jcruz
  */
-public class TestFlame extends MIDlet{
- 
+public class TestSensors extends MIDlet {
+
     DFR0076Device flame;
+    private static final int FLAME_DETECTOR_PIN = 22;
     
+    HCSR501Device pir;
+    private static final int MOTION_DETECTOR_PIN = 24;
+    
+    @Override
     public void startApp() {
-        //Inicialize Flame Sensor
-         flame = new DFR0076Device(22);
+        //Initialize Flame Sensor
+        flame = new DFR0076Device(FLAME_DETECTOR_PIN);
         flame.setListener(new FlameSensor());
-        
+        //Initialize PIR sensor
+        pir = new HCSR501Device(MOTION_DETECTOR_PIN);
+        pir.setListener(new PirSensor());
     }
-    
-    
+
+    @Override
     public void destroyApp(boolean unconditional) {
         flame.close();
+        pir.close();
     }
-    
-    private static int waitnext=1;
-    
-     //Check Flame Sensor and update Xively
+
+    //Check flame sensor for flame detect
+    private static int waitnext = 1;
+
     class FlameSensor implements PinListener {
-        
+
         @Override
         public void valueChanged(PinEvent event) {
-                          
-                if (event.getValue() && --waitnext==0) {
-                   System.out.println("Llama...");
-                   waitnext=10;
-                 }
-
+            if (event.getValue() && --waitnext == 0) {
+                System.out.println("WARNING Flame detected!!!");
+                waitnext = 10;
             }
         }
+    }
 
-    
+    //Check PIR Sensor for motion detect
+    class PirSensor implements PinListener {
+
+        @Override
+        public void valueChanged(PinEvent event) {
+            if (event.getValue()) {
+                System.out.println("WARNING Motion detected!!!");
+            }
+
+        }
+    }
+
 }

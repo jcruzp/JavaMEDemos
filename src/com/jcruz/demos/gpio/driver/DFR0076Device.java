@@ -24,7 +24,6 @@
 
 package com.jcruz.demos.gpio.driver;
 
-import com.jcruz.demos.i2c.I2CUtils;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,8 +33,8 @@ import jdk.dio.gpio.GPIOPinConfig;
 import jdk.dio.gpio.PinListener;
 
 /**
- *
- * @author jcruz
+ * Flame sensor device
+ * @author Jose Cruz
  */
 public class DFR0076Device {
     
@@ -46,18 +45,14 @@ public class DFR0076Device {
             pin = (GPIOPin) DeviceManager.open(new GPIOPinConfig(
                     0, pinGPIO, GPIOPinConfig.DIR_INPUT_ONLY, GPIOPinConfig.MODE_INPUT_PULL_UP,
                     GPIOPinConfig.TRIGGER_RISING_EDGE, false));
-
-            I2CUtils.I2Cdelay(3000);    //wait for 3 seconds
         } catch (IOException ex) {
-            Logger.getGlobal().log(Level.WARNING,ex.getLocalizedMessage());
+            Logger.getGlobal().log(Level.WARNING,ex.getMessage());
         }
     }
 
     public GPIOPin getPin() {
         return pin;
     }
-    
-    
     
     /**
      * Defined listener to flame sensor pin
@@ -68,30 +63,20 @@ public class DFR0076Device {
         try {
             pin.setInputListener(pirListener);
         } catch (IOException ex) {
-            Logger.getGlobal().log(Level.WARNING,ex.getLocalizedMessage());
+            Logger.getGlobal().log(Level.WARNING,ex.getMessage());
         }
     }
     
     /**
-     * Remove listener for flame sensor
-     */
-    public void removeListener() {
-        try {
-            pin.setInputListener(null);
-        } catch (IOException ex) {
-            Logger.getGlobal().log(Level.WARNING,ex.getLocalizedMessage());
-        }
-    }
-
-    /**
      * Free PIR GPIO
-     *
      */
     public void close() {
         try {
-            pin.close();
+            //Remove listener for flame sensor
+            pin.setInputListener(null); 
+            pin.close(); 
         } catch (IOException ex) {
-            Logger.getGlobal().log(Level.WARNING,ex.getLocalizedMessage());
+            Logger.getGlobal().log(Level.WARNING,ex.getMessage());
         }
     }
     

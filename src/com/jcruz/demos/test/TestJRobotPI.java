@@ -28,7 +28,7 @@ import com.jcruz.demos.i2c.driver.WiiRemote;
 import com.jcruz.demos.i2c.driver.WiiRemote.Button2Enum;
 import com.jcruz.demos.i2c.driver.BMP180Device;
 import com.jcruz.demos.i2c.driver.BMP180Mode;
-import com.jcruz.demos.gpio.driver.GPIODevice;
+import com.jcruz.demos.gpio.driver.HCSR501Device;
 import com.jcruz.demos.http.driver.XivelyDevice;
 import com.jcruz.demos.i2c.driver.PCA9685Device;
 import com.jcruz.demos.i2c.driver.HTU21DDevice;
@@ -310,10 +310,10 @@ public class TestJRobotPI extends MIDlet {
             ex.printStackTrace();
         }
     }
-    GPIODevice pir;
+    HCSR501Device pir;
 
     private void TestPIR() {
-        pir = new GPIODevice(25);
+        pir = new HCSR501Device(25);
         pir.setListener(new MyPinListener());
     }
 

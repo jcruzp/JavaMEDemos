@@ -66,7 +66,7 @@ public class HCSR04Device {
             I2CUtils.I2Cdelay(500);  //wait for 0.5 seconds
 
         } catch (IOException ex) {
-            Logger.getGlobal().log(Level.WARNING,ex.getLocalizedMessage());
+            Logger.getGlobal().log(Level.WARNING,ex.getMessage());
         }
     }
 
@@ -95,7 +95,7 @@ public class HCSR04Device {
             delta = (stop - start);
             distance = delta * SPEEDOFSOUND;       // echo from 0 to 1 depending object distance
         } catch (IOException ex) {
-            Logger.getGlobal().log(Level.WARNING,ex.getLocalizedMessage());
+            Logger.getGlobal().log(Level.WARNING,ex.getMessage());
         }
         return distance / 2.0 / (1000000000L); // cm/s
     }
@@ -109,7 +109,7 @@ public class HCSR04Device {
             trigger.close();
             echo.close();;
         } catch (IOException ex) {
-            Logger.getGlobal().log(Level.WARNING,ex.getLocalizedMessage());
+            Logger.getGlobal().log(Level.WARNING,ex.getMessage());
         }
     }
 }
