@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- You may freely edit this file. See commented blocks below for -->
-<!-- some examples of how to customize the build. -->
-<!-- (If you delete it and reopen the project it will be recreated.) -->
+<!--
+2014 Jose Cruz <joseacruzp@gmail.com>.
+-->
+
 <project name="JavaMEDemos" default="default" basedir="." xmlns:j2meproject1="http://www.netbeans.org/ns/j2me-embedded-project/1">
     <description>Builds, tests, and runs the project JavaMEDemos.</description>
     <import file="nbproject/build-impl.xml"/>

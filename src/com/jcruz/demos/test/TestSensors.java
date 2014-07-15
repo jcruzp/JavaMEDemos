@@ -1,25 +1,5 @@
-/*
- * The MIT License
- *
- * Copyright 2014 jcruz.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+/* 
+ * 2014 Jose Cruz <joseacruzp@gmail.com>.
  */
 package com.jcruz.demos.test;
 
@@ -27,6 +7,9 @@ import com.jcruz.demos.gpio.driver.DFR0076Device;
 import com.jcruz.demos.gpio.driver.HCSR04Device;
 import com.jcruz.demos.gpio.driver.HCSR501Device;
 import com.jcruz.demos.i2c.I2CUtils;
+import com.jcruz.demos.log.LoggingHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.microedition.midlet.MIDlet;
 import jdk.dio.gpio.PinEvent;
 import jdk.dio.gpio.PinListener;
@@ -34,9 +17,11 @@ import jdk.dio.gpio.PinListener;
 /**
  * Midlet to Test all sensors connected to Raspberry Pi
  *
- * @author jcruz
+ * @author Jose Cruz
  */
 public class TestSensors extends MIDlet {
+    
+    private LoggingHandler loggerHandler = LoggingHandler.getInstance();
 
     //Define DFR0076 Device object
     DFR0076Device flame;
@@ -55,8 +40,15 @@ public class TestSensors extends MIDlet {
     private volatile boolean shouldRun = true;
     private ReadSensors sensorsTask;
     
+    /**
+     * Start MIDLet
+     */
     @Override
     public void startApp() {
+        //Activate Log handler
+        loggerHandler.start();
+        //Set Logger to INFO
+        Logger.getGlobal().setLevel(Level.INFO);
         //Initialize Flame Sensor
         flame = new DFR0076Device(FLAME_DETECTOR_PIN);
         flame.setListener(new FlameSensor());
@@ -70,8 +62,14 @@ public class TestSensors extends MIDlet {
         sensorsTask.start();
     }
 
+    /**
+     * End MIDLet
+     * @param unconditional
+     */
     @Override
     public void destroyApp(boolean unconditional) {
+        Logger.getGlobal().log(Level.INFO,"Ending test program...");
+        loggerHandler.close();
         shouldRun=false;
         flame.close();
         pir.close();

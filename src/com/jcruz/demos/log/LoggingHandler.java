@@ -1,25 +1,5 @@
 /* 
- * The MIT License
- *
- * Copyright 2014 Jose Cruz <joseacruzp@gmail.com>.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * 2014 Jose Cruz <joseacruzp@gmail.com>.
  */
 package com.jcruz.demos.log;
 
@@ -42,7 +22,7 @@ import javax.microedition.io.SocketConnection;
  *
  * @see Logger
  */
-public class LoggingHandler extends StreamHandler implements Runnable {
+public class LoggingHandler extends StreamHandler {
 
     private static final String PREFIX = "Logging: ";
     
@@ -80,70 +60,6 @@ public class LoggingHandler extends StreamHandler implements Runnable {
     public void start() {
         setOutputStream(System.out);
         Logger.getGlobal().addHandler(this);
-        try {
-            servSocket = (ServerSocketConnection) Connector.open("socket://:" + LOGGING_PORT);
-            shouldRun = true;
-            thread = new Thread(this);
-            thread.start();
-        } catch (IOException ex) {
-            Logger.getGlobal().log(Level.SEVERE, PREFIX + "{0}", ex.getMessage());
-        }
     }
 
-    /**
-     * Stop handler. Network socket is closed and listening thread is shut down.
-     */
-    public void stop() {
-        synchronized (this) {
-            if (socket != null) {
-                try {
-                    close();
-                    socket.close();
-                    servSocket.close();
-                } catch (IOException ex) {
-                    Logger.getGlobal().log(Level.SEVERE, PREFIX + "{0}", ex.getMessage());
-                }
-            }
-            shouldRun = false;
-        }
-        try {
-            thread.join();
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    /**
-     * Listening thread. Accepts connections. When new connection is accepted,
-     * previous one is closed (if it existed) and output is redirected to the
-     * new connection.
-     */
-    @Override
-    public void run() {
-        while (shouldRun) {
-            try {
-                // block until connection is requested by peer
-                SocketConnection newSocket =
-                        (SocketConnection) servSocket.acceptAndOpen();
-
-                synchronized (this) {
-                    if (shouldRun) {
-                        OutputStream outStream = newSocket.openOutputStream();
-
-                        // close previous connection...
-                        if (socket != null) {
-                            close();
-                            socket.close();
-                        }
-                        // ...and replace with new one.
-                        socket = newSocket;
-                        setOutputStream(outStream);
-                    }
-                }
-            } catch (IOException ex) {
-                shouldRun = false;
-                Logger.getGlobal().log(Level.SEVERE, PREFIX + "{0}", ex.getMessage());
-            }
-        }
-    }
 }
