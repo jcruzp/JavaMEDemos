@@ -53,7 +53,7 @@ public class TestSensors extends MIDlet {
     
     //Define execution of read sensors thread
     private volatile boolean shouldRun = true;
-    private ReadSensors sensorstask;
+    private ReadSensors sensorsTask;
     
     @Override
     public void startApp() {
@@ -66,8 +66,8 @@ public class TestSensors extends MIDlet {
         //Initialize Ultrasound sensor
         hcsr04=new HCSR04Device(TRIGGER_PIN, ECHO_PIN);
         //Start read sensors data thread
-        sensorstask=new ReadSensors();
-        sensorstask.start();
+        sensorsTask=new ReadSensors();
+        sensorsTask.start();
     }
 
     @Override
