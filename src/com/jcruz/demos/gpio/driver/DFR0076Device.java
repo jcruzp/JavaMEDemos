@@ -48,7 +48,7 @@ public class DFR0076Device {
     }
     
     /**
-     * Free PIR GPIO
+     * Free flame GPIO
      */
     public void close() {
         try {
