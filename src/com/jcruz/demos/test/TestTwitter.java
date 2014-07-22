@@ -21,14 +21,20 @@ import com.oracle.httpclient.HttpClientBuilder;
 import com.oracle.httpclient.HttpHeader;
 import com.oracle.httpclient.HttpMethod;
 import com.oracle.httpclient.HttpRequest;
-import com.oracle.httpclient.HttpRequestBuilder;
 import com.oracle.httpclient.HttpResponse;
+import com.oracle.json.Json;
+import com.oracle.json.JsonArray;
+import com.oracle.json.JsonException;
+import com.oracle.json.JsonObject;
+import com.oracle.json.JsonReader;
 import com.substanceofcode.utils.StringUtil;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Hashtable;
 import javax.microedition.midlet.MIDlet;
 import net.oauth.j2me.OAuthMessage;
 import net.oauth.j2me.Util;
-import net.oauth.j2me.signature.HMACSHA1Signature;
 
 /**
  *
@@ -44,7 +50,7 @@ public class TestTwitter extends MIDlet {
     @Override
     public void startApp() {
         String requestURI = "https://api.twitter.com/1.1/direct_messages/new.json";
-        String requestQuery = "screen_name=josecruzpruebas&text=Prueba de Msg 14";
+        String requestQuery = "screen_name=josecruzpruebas&text=Prueba de Msg 16";
 
         OAuthMessage req = new OAuthMessage();
         req.setRequestMethod("POST");
@@ -60,7 +66,7 @@ public class TestTwitter extends MIDlet {
             kv = Util.split(queries[i], "=");
             qp.put(kv[0], kv[1]);
         }
-        
+
         req.setAdditionalProperties(qp);
         req.createSignature("HMAC-SHA1", consumerSecretStr);
 
@@ -74,7 +80,72 @@ public class TestTwitter extends MIDlet {
                 .build();
 
         HttpResponse response = request.invoke();
+
         System.out.println(response.getResponseCode());
+        System.out.println(getFollowersInfo());
+    }
+
+    private OutputStream os = null;
+
+    /**
+     *
+     * @return JsonObject with response from feed with channel info
+     */
+    public JsonArray getFollowersInfo() {
+        //String requestURI = "https://api.twitter.com/1.1/followers/ids.json";
+        //String requestQuery = "cursor=-1&screen_name=josecruzpruebas&count=5000";
+        String requestURI = "https://api.twitter.com/1.1/direct_messages.json";
+        String requestQuery = "since_id=5&count=1&include_entities=false&skip_status=true";
+        InputStream is = null;
+        //JsonObject json = null;
+        JsonArray json = null;
+        
+        OAuthMessage req = new OAuthMessage();
+        req.setRequestMethod("GET");
+        req.setRequestURL(requestURI);
+        req.setConsumerKey(consumerKeyStr);
+        req.setToken(accessTokenStr);
+        req.setTokenSecret(accessTokenSecretStr);
+
+        if (requestQuery.trim().length() > 0) {
+            Hashtable qp = new Hashtable();
+            String[] queries = Util.split(requestQuery, "&");
+            String[] kv;
+            for (int i = 0; i < queries.length; i++) {
+                kv = Util.split(queries[i], "=");
+                qp.put(kv[0], kv[1]);
+            }
+            req.setAdditionalProperties(qp);
+        }
+        
+        req.createSignature("HMAC-SHA1", consumerSecretStr);
+
+        String header = req.convertToAuthorizationHeader();
+        System.out.println("Authorization: " + header);
+
+        HttpClient client = HttpClientBuilder.getInstance().build();
+        HttpRequest request = client.build(requestURI + "?" + StringUtil.replace(requestQuery, " ", "%20"))
+                .setMethod(HttpMethod.GET)
+                .setHeader(HttpHeader.AUTHORIZATION, header)
+                .build();
+
+        HttpResponse response = request.invoke();
+
+        System.out.println(response.getResponseCode());
+        is = response.getBodyStream();
+
+        try (JsonReader jsonReader = Json.createReader(is)) {
+            json = jsonReader.readArray();
+        }
+
+        if (is != null) {
+            try {
+                is.close();
+            } catch (IOException ex) {
+            }
+        }
+
+        return json;
     }
 
     @Override
