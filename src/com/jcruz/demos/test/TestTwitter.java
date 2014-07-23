@@ -95,7 +95,7 @@ public class TestTwitter extends MIDlet {
         //String requestURI = "https://api.twitter.com/1.1/followers/ids.json";
         //String requestQuery = "cursor=-1&screen_name=josecruzpruebas&count=5000";
         String requestURI = "https://api.twitter.com/1.1/direct_messages.json";
-        String requestQuery = "since_id=5&count=1&include_entities=false&skip_status=true";
+        String requestQuery = "count=5&include_entities=false&skip_status=true";
         InputStream is = null;
         //JsonObject json = null;
         JsonArray json = null;
@@ -138,6 +138,10 @@ public class TestTwitter extends MIDlet {
             json = jsonReader.readArray();
         }
 
+        JsonObject home = json.getJsonObject(0);
+        String msg = home.getString("text");
+        System.out.println(msg);
+        
         if (is != null) {
             try {
                 is.close();
