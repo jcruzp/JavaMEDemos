@@ -25,7 +25,7 @@ import org.bouncycastle.crypto.params.KeyParameter;
 
 import net.oauth.j2me.Util;
 
-import com.substanceofcode.utils.Log;
+//import com.substanceofcode.utils.Log;
 
 public class HMACSHA1Signature implements OAuthSignature {
     private String method;
@@ -77,10 +77,10 @@ public class HMACSHA1Signature implements OAuthSignature {
             System.out.println("unencoded: "+new String(mac));
             System.out.println("sig: "+signature);
         } catch (java.io.UnsupportedEncodingException e) {
-            Log.error("getSignature() "+e.toString());
+//            Log.error("getSignature() "+e.toString());
 			e.printStackTrace();
         } catch (Exception e) {
-            Log.error("getSignature() "+e.toString());
+//            Log.error("getSignature() "+e.toString());
 			e.printStackTrace();
         }
 

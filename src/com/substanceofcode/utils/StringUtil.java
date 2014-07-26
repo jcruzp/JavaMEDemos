@@ -121,7 +121,7 @@ public class StringUtil {
             plainText = decodeEntities(plainText);
             return plainText;
         } catch (Exception e) {
-            Log.error("Error while removing HTML: " + e.toString());
+//            Log.error("Error while removing HTML: " + e.toString());
             return text;
         }
     }

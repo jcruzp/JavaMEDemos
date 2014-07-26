@@ -24,7 +24,6 @@ import com.oracle.httpclient.HttpRequest;
 import com.oracle.httpclient.HttpResponse;
 import com.oracle.json.Json;
 import com.oracle.json.JsonArray;
-import com.oracle.json.JsonException;
 import com.oracle.json.JsonObject;
 import com.oracle.json.JsonReader;
 import com.substanceofcode.utils.StringUtil;
@@ -42,15 +41,22 @@ import net.oauth.j2me.Util;
  */
 public class TestTwitter extends MIDlet {
 
-    static String consumerKeyStr = "nk1rMBWdjhZj21u6UN09OyknW";
-    static String consumerSecretStr = "mEAFzeLrmLxxFRrPFyqj5m2la37K4PsNfdZ5hAMQmumI16JaLs";
-    static String accessTokenStr = "1267971140-3PRdd67xMEst4AdOj8XSeTEGYpHdCdpEqTIFvbz";
-    static String accessTokenSecretStr = "JNTVLlwQskyXT3mOUfuJNugrcl85WvjxGiFxTyDPgxGEF";
+    static String consumerKeyStr = "iXMe961nayGZH28Bwhh8s6oWK";
+    static String consumerSecretStr = "e3atmSHzqpQF5ih2d053fgFTrLobJbbW72kVKP0j8o3mapDbkc";
+    static String accessTokenStr = "2678087965-oqw0l3w8UJWphCHhafvTsp2hCAqgfju27loI6vA";
+    static String accessTokenSecretStr = "FAC4OG3tjAJ3YJfIZhkdFmaaj7ebHM4OIsy3yJH6dpn72";
 
     @Override
     public void startApp() {
+
+        //TestPost();
+        //System.out.println(getFollowersInfo());
+        TestStream();
+    }
+
+    private void TestPost() {
         String requestURI = "https://api.twitter.com/1.1/direct_messages/new.json";
-        String requestQuery = "screen_name=josecruzpruebas&text=Prueba de Msg 16";
+        String requestQuery = "screen_name=josecruzpruebas&text=Prueba de Msg 17";
 
         OAuthMessage req = new OAuthMessage();
         req.setRequestMethod("POST");
@@ -82,7 +88,6 @@ public class TestTwitter extends MIDlet {
         HttpResponse response = request.invoke();
 
         System.out.println(response.getResponseCode());
-        System.out.println(getFollowersInfo());
     }
 
     private OutputStream os = null;
@@ -99,7 +104,7 @@ public class TestTwitter extends MIDlet {
         InputStream is = null;
         //JsonObject json = null;
         JsonArray json = null;
-        
+
         OAuthMessage req = new OAuthMessage();
         req.setRequestMethod("GET");
         req.setRequestURL(requestURI);
@@ -117,7 +122,7 @@ public class TestTwitter extends MIDlet {
             }
             req.setAdditionalProperties(qp);
         }
-        
+
         req.createSignature("HMAC-SHA1", consumerSecretStr);
 
         String header = req.convertToAuthorizationHeader();
@@ -141,7 +146,7 @@ public class TestTwitter extends MIDlet {
         JsonObject home = json.getJsonObject(0);
         String msg = home.getString("text");
         System.out.println(msg);
-        
+
         if (is != null) {
             try {
                 is.close();
@@ -150,6 +155,193 @@ public class TestTwitter extends MIDlet {
         }
 
         return json;
+    }
+
+    private void CreateFriend(String screen_name) {
+        String requestURI = "https://api.twitter.com/1.1/friendships/create.json";
+        String requestQuery = "screen_name=" + screen_name;
+
+        OAuthMessage req = new OAuthMessage();
+        req.setRequestMethod("POST");
+        req.setRequestURL(requestURI);
+        req.setConsumerKey(consumerKeyStr);
+        req.setToken(accessTokenStr);
+        req.setTokenSecret(accessTokenSecretStr);
+
+        Hashtable qp = new Hashtable();
+        String[] queries = Util.split(requestQuery, "&");
+        String[] kv;
+        for (int i = 0; i < queries.length; i++) {
+            kv = Util.split(queries[i], "=");
+            qp.put(kv[0], kv[1]);
+        }
+
+        req.setAdditionalProperties(qp);
+        req.createSignature("HMAC-SHA1", consumerSecretStr);
+
+        String header = req.convertToAuthorizationHeader();
+        System.out.println("Authorization: " + header);
+
+        HttpClient client = HttpClientBuilder.getInstance().build();
+        HttpRequest request = client.build(requestURI + '?' + StringUtil.replace(requestQuery, " ", "%20"))
+                .setMethod(HttpMethod.POST)
+                .setHeader(HttpHeader.AUTHORIZATION, header)
+                .build();
+
+        HttpResponse response = request.invoke();
+
+        System.out.println(response.getResponseCode());
+    }
+
+    public void TestStream() {
+        String requestURI = "https://userstream.twitter.com/1.1/user.json";
+        String requestQuery = "stall_warnings=false";
+        InputStream is = null;
+        //JsonObject json = null;
+        JsonObject json = null;
+
+        OAuthMessage req = new OAuthMessage();
+        req.setRequestMethod("GET");
+        req.setRequestURL(requestURI);
+        req.setConsumerKey(consumerKeyStr);
+        req.setToken(accessTokenStr);
+        req.setTokenSecret(accessTokenSecretStr);
+
+        if (requestQuery.trim().length() > 0) {
+            Hashtable qp = new Hashtable();
+            String[] queries = Util.split(requestQuery, "&");
+            String[] kv;
+            for (int i = 0; i < queries.length; i++) {
+                kv = Util.split(queries[i], "=");
+                qp.put(kv[0], kv[1]);
+            }
+            req.setAdditionalProperties(qp);
+        }
+
+        req.createSignature("HMAC-SHA1", consumerSecretStr);
+
+        String header = req.convertToAuthorizationHeader();
+        System.out.println("Authorization: " + header);
+
+        HttpClient client = HttpClientBuilder.getInstance().build();
+        HttpRequest request = client.build(requestURI + "?" + StringUtil.replace(requestQuery, " ", "%20"))
+                .setMethod(HttpMethod.GET)
+                .setHeader(HttpHeader.AUTHORIZATION, header)
+                .build();
+
+        HttpResponse response = request.invoke();
+
+        System.out.println(response.getResponseCode());
+        JsonReader jsonReader = null;
+        for (int msgRead = 0; msgRead < 100; msgRead++) {
+            is = response.getBodyStream();
+
+            jsonReader = Json.createReader(is);
+            json = jsonReader.readObject();
+
+            if (json != null) {
+                //TwitterJsonObjectType.Type event = TwitterJsonObjectType.determine(json);
+//                switch (event) {
+//                    case SENDER:
+//                        onSender(json, listeners);
+//                        break;
+//                    case STATUS:
+//                        onStatus(json, listeners);
+//                        break;
+//                    case DIRECT_MESSAGE:
+//                        onDirectMessage(json, listeners);
+//                        break;
+//                    case DELETE:
+//                        onDelete(json, listeners);
+//                        break;
+//                    case LIMIT:
+//                        onLimit(json, listeners);
+//                        break;
+//                    case STALL_WARNING:
+//                        onStallWarning(json, listeners);
+//                        break;
+//                    case SCRUB_GEO:
+//                        onScrubGeo(json, listeners);
+//                        break;
+//                    case FRIENDS:
+//                        onFriends(json, listeners);
+//                        break;
+//                    case FAVORITE:
+//                        onFavorite(json.getJSONObject("source"), json.getJSONObject("target"), json.getJSONObject("target_object"), listeners);
+//                        break;
+//                    case UNFAVORITE:
+//                        onUnfavorite(json.getJSONObject("source"), json.getJSONObject("target"), json.getJSONObject("target_object"), listeners);
+//                        break;
+//                    case FOLLOW:
+//                        onFollow(json.getJSONObject("source"), json.getJSONObject("target"), listeners);
+//                        break;
+//                    case UNFOLLOW:
+//                        onUnfollow(json.getJSONObject("source"), json.getJSONObject("target"), listeners);
+//                        break;
+//                    case USER_LIST_MEMBER_ADDED:
+//                        onUserListMemberAddition(json.getJSONObject("target"), json.getJSONObject("source"), json.getJSONObject("target_object"), listeners);
+//                        break;
+//                    case USER_LIST_MEMBER_DELETED:
+//                        onUserListMemberDeletion(json.getJSONObject("target"), json.getJSONObject("source"), json.getJSONObject("target_object"), listeners);
+//                        break;
+//                    case USER_LIST_SUBSCRIBED:
+//                        onUserListSubscription(json.getJSONObject("source"), json.getJSONObject("target"), json.getJSONObject("target_object"), listeners);
+//                        break;
+//                    case USER_LIST_UNSUBSCRIBED:
+//                        onUserListUnsubscription(json.getJSONObject("source"), json.getJSONObject("target"), json.getJSONObject("target_object"), listeners);
+//                        break;
+//                    case USER_LIST_CREATED:
+//                        onUserListCreation(json.getJSONObject("source"), json.getJSONObject("target_object"), listeners);
+//                        break;
+//                    case USER_LIST_UPDATED:
+//                        onUserListUpdated(json.getJSONObject("source"), json.getJSONObject("target_object"), listeners);
+//                        break;
+//                    case USER_LIST_DESTROYED:
+//                        onUserListDestroyed(json.getJSONObject("source"), json.getJSONObject("target_object"), listeners);
+//                        break;
+//                    case USER_UPDATE:
+//                        onUserUpdate(json.getJSONObject("source"), json.getJSONObject("target"), listeners);
+//                        break;
+//                    case BLOCK:
+//                        onBlock(json.getJSONObject("source"), json.getJSONObject("target"), listeners);
+//                        break;
+//                    case UNBLOCK:
+//                        onUnblock(json.getJSONObject("source"), json.getJSONObject("target"), listeners);
+//                        break;
+//                    case DISCONNECTION:
+//                        onDisconnectionNotice(line, listeners);
+//                        break;
+//                    case UNKNOWN:
+//                    default:
+//                        logger.warn("Received unknown event:", CONF.getHttpClientConfiguration().isPrettyDebugEnabled() ? json.toString(1) : json.toString());
+//                }
+                System.out.println(json);
+
+                if (json.containsKey("event")) {
+                    if (json.getString("event").equals("follow")) {
+                        if (!json.getJsonObject("source").getString("screen_name").equals("jrobotpi")) {
+                            CreateFriend(json.getJsonObject("source").getString("screen_name"));
+                        }
+                    }
+                }
+
+                if (json.getJsonObject("direct_message") != null) {
+                    System.out.print("De:" + json.getJsonObject("direct_message").getJsonObject("sender").getString("name"));
+                    System.out.println(" Msg:" + json.getJsonObject("direct_message").getString("text"));
+
+                }
+
+            }
+        }
+
+        if (is != null) {
+            try {
+                jsonReader.close();
+                is.close();
+            } catch (IOException ex) {
+            }
+        }
+
     }
 
     @Override
