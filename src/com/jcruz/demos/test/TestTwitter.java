@@ -328,7 +328,8 @@ public class TestTwitter extends MIDlet {
                 if (json.getJsonObject("direct_message") != null) {
                     System.out.print("De:" + json.getJsonObject("direct_message").getJsonObject("sender").getString("name"));
                     System.out.println(" Msg:" + json.getJsonObject("direct_message").getString("text"));
-
+                    if (json.getJsonObject("direct_message").getString("text").equals("Close"))
+                        break;
                 }
 
             }
@@ -339,12 +340,14 @@ public class TestTwitter extends MIDlet {
                 jsonReader.close();
                 is.close();
             } catch (IOException ex) {
+                ex.printStackTrace();
             }
         }
-
+        destroyApp(false);
     }
 
     @Override
     public void destroyApp(boolean unconditional) {
+        notifyDestroyed();
     }
 }
