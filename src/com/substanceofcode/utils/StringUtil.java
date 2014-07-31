@@ -17,11 +17,13 @@
  * limitations under the License.
  */
 
-package com.jcruz.utils;
+package com.substanceofcode.utils;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Vector;
 
+import com.sugree.utils.URLEncoder;
+import com.sugree.utils.URLDecoder;
 
 /**
  *

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.jcruz.utils;
+package net.oauth.j2me;
 
 import java.util.Random;
 

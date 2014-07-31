@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.jcruz.utils.signature;
+package net.oauth.j2me.signature;
 
 // TODO -- note about how to get bouncycastle stuff
 import org.bouncycastle.crypto.macs.HMac;
@@ -23,7 +23,7 @@ import org.bouncycastle.crypto.params.KeyParameter;
 //import javax.crypto.spec.SecretKeySpec;
 
 
-import com.jcruz.utils.Util;
+import net.oauth.j2me.Util;
 
 //import com.substanceofcode.utils.Log;
 
