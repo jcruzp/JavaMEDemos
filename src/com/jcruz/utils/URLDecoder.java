@@ -1,4 +1,4 @@
-package com.sugree.utils;
+package com.jcruz.utils;
 /*
  * http://jcs.mobile-utopia.com/jcs/919_URLDecoder.java
  */

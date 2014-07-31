@@ -26,14 +26,14 @@ import com.oracle.json.Json;
 import com.oracle.json.JsonArray;
 import com.oracle.json.JsonObject;
 import com.oracle.json.JsonReader;
-import com.substanceofcode.utils.StringUtil;
+import com.jcruz.utils.StringUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Hashtable;
 import javax.microedition.midlet.MIDlet;
-import net.oauth.j2me.OAuthMessage;
-import net.oauth.j2me.Util;
+import com.jcruz.utils.oauth.OAuthMessage;
+import com.jcruz.utils.Util;
 
 /**
  *

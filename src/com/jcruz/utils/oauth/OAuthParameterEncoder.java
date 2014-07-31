@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package net.oauth.j2me;
+package com.jcruz.utils.oauth;
 
 //import java.nio.charset.CharsetEncoder;
 //import java.lang.CharSequence;
 //import java.lang.StringBuilder;
 //import java.net.URLEncoder;
-import net.oauth.j2me.Util;
+import com.jcruz.utils.Util;
+import com.jcruz.utils.Util;
 //import java.lang.StringBuffer;
 public class OAuthParameterEncoder {
     private String unreservedCharactersPattern = "[a-zA-Z0-9\\-\\._~]";

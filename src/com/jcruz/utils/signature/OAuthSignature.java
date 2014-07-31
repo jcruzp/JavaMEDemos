@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.oauth.j2me.signature;
+package com.jcruz.utils.signature;
 
 public interface OAuthSignature {
     String getMethod();

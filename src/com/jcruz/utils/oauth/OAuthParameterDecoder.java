@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.oauth.j2me;
+package com.jcruz.utils.oauth;
 /*
 import java.lang.StringBuilder;
 import java.net.URLDecoder;

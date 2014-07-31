@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package net.oauth.j2me.signature;
+package com.jcruz.utils.signature;
 
-import net.oauth.j2me.OAuthParameterEncoder;
-import net.oauth.j2me.OAuthParameterDecoder;
+import com.jcruz.utils.oauth.OAuthParameterEncoder;
+import com.jcruz.utils.oauth.OAuthParameterDecoder;
 
 public class PLAINTEXTSignature implements OAuthSignature {
     private String method;

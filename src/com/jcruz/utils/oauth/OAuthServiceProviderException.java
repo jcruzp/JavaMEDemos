@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.oauth.j2me;
+package com.jcruz.utils.oauth;
 
 public class OAuthServiceProviderException extends Exception {
     private int http_response_code;

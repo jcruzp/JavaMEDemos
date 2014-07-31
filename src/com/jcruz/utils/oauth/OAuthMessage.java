@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package net.oauth.j2me;
+package com.jcruz.utils.oauth;
 
+import com.jcruz.utils.Util;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Date;
 import java.util.Random;
-import net.oauth.j2me.signature.OAuthSignature;
+import com.jcruz.utils.signature.OAuthSignature;
 
 
 public class OAuthMessage {
@@ -334,10 +335,10 @@ public class OAuthMessage {
         String signatureClassName = "";
         if ("PLAINTEXT".equals(signatureMethod)) {
             signatureClassName = "net.oauth.j2me.signature.PLAINTEXTSignature";
-            createSignature(new net.oauth.j2me.signature.PLAINTEXTSignature(), consumerSecret);
+            createSignature(new com.jcruz.utils.signature.PLAINTEXTSignature(), consumerSecret);
         } else if ("HMAC-SHA1".equals(signatureMethod)) {
             signatureClassName = "net.oauth.j2me.signature.HMACSHA1Signature";
-            createSignature(new net.oauth.j2me.signature.HMACSHA1Signature(), consumerSecret);
+            createSignature(new com.jcruz.utils.signature.HMACSHA1Signature(), consumerSecret);
         }
         System.out.println("sig mthod="+signatureMethod+", sig class name="+signatureClassName);
 		/*

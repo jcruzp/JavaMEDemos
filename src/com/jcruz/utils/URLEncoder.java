@@ -1,4 +1,4 @@
-package com.sugree.utils;
+package com.jcruz.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

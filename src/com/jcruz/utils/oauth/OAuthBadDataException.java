@@ -7,7 +7,7 @@
  * and open the template in the editor.
  */
 
-package net.oauth.j2me;
+package com.jcruz.utils.oauth;
 
 /**
  *
