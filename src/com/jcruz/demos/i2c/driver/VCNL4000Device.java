@@ -69,6 +69,7 @@ public class VCNL4000Device extends I2CRpi {
         Logger.getGlobal().log(Level.FINE, "IR LED current = " + String.valueOf(VCNL4000.IRLED.read(device) * 10) + " mA");
 
         //write8(VCNL4000_SIGNALFREQ, 3);
+        setSignalFreq(Freq.F390K625);
         Logger.getGlobal().log(Level.FINE, "Proximity measurement frequency = ");
         byte freq = (byte) VCNL4000.SIGNALFREQ.read(device);
         if (freq == Freq.F3M125.value) {

@@ -59,7 +59,7 @@ public class HMC5883LDevice extends I2CRpi {
      *
      * @return
      */
-    public MagnetometerRaw ReadRawAxis() {
+    public MagnetometerRaw readRawAxis() {
         ByteBuffer buffer = ByteBuffer.allocateDirect(6);
         try {
             device.read(HMC5883L.DataRegBegin.cmd, 1, buffer);
@@ -83,8 +83,8 @@ public class HMC5883LDevice extends I2CRpi {
      *
      * @return
      */
-    public MagnetometerScaled ReadScaledAxis() {
-        MagnetometerRaw raw = ReadRawAxis();
+    public MagnetometerScaled readScaledAxis() {
+        MagnetometerRaw raw = readRawAxis();
         MagnetometerScaled scaled = new MagnetometerScaled();
         scaled.XAxis = raw.XAxis * m_Scale;
         scaled.ZAxis = raw.ZAxis * m_Scale;
@@ -97,7 +97,7 @@ public class HMC5883LDevice extends I2CRpi {
      * @param gauss
      * @return
      */
-    public int SetScale(float gauss) {
+    public int setScale(float gauss) {
         int regValue = 0x00;
         if (gauss == 0.88) {
             regValue = 0x00;
@@ -137,7 +137,7 @@ public class HMC5883LDevice extends I2CRpi {
      *
      * @param mode
      */
-    public void SetMeasurementMode(Measurement mode) {
+    public void setMeasurementMode(Measurement mode) {
         HMC5883L.ModeReg.write(device, mode.value);
        // Write(ModeRegister, mode);
     }
@@ -147,9 +147,9 @@ public class HMC5883LDevice extends I2CRpi {
      * @return
      */
     public double calculateHeading(){
-            MagnetometerRaw raw = ReadRawAxis();
+            MagnetometerRaw raw = readRawAxis();
             // Retrived the scaled values from the compass (scaled to the configured scale).
-            MagnetometerScaled scaled = ReadScaledAxis();
+            MagnetometerScaled scaled = readScaledAxis();
 
             // Values are accessed like so:
             //int MilliGauss_OnThe_XAxis = scaled.XAxis;// (or YAxis, or ZAxis)

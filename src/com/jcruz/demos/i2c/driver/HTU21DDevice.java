@@ -165,7 +165,7 @@ public class HTU21DDevice extends I2CRpi {
      * @param check_value_from_sensor
      * @return CRC check value
      */
-    public long check_crc(short message_from_sensor, short check_value_from_sensor) {
+    private long check_crc(short message_from_sensor, short check_value_from_sensor) {
         //Test cases from datasheet:
         //message = 0xDC, checkvalue is 0x79
         //message = 0x683A, checkvalue is 0x7C

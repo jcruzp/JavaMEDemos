@@ -61,16 +61,6 @@ public enum HTU21D {
     }
 
     /**
-     * read a short from HTU21D connected to I2C Bus
-     *
-     * @param device
-     * @return
-     */
-    public short readShort(I2CDevice device) {
-        return I2CUtils.readShort(device, this.cmd);
-    }
-
-    /**
      * write to HTU21D connected to I2C bus
      *
      * @param device

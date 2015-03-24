@@ -21,12 +21,12 @@ public class TestHMC5883 extends MIDlet {
     public void startApp() {
         try {
             HMC5883LDevice hmc = new HMC5883LDevice();
-            hmc.SetScale(1.3F);
-            hmc.SetMeasurementMode(HMC5883LDevice.Measurement.Continuous);
+            hmc.setScale(1.3F);
+            hmc.setMeasurementMode(HMC5883LDevice.Measurement.Continuous);
             while (true) {
                 System.out.println(hmc.calculateHeading());
                 I2CUtils.I2Cdelay(2000);
-                HMC5883LDevice.MagnetometerRaw values = hmc.ReadRawAxis();
+                HMC5883LDevice.MagnetometerRaw values = hmc.readRawAxis();
                 System.out.print("X:" + values.XAxis);
                 System.out.print(" Y:" + values.YAxis);
                 System.out.println(" Z:" + values.ZAxis);

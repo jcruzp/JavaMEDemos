@@ -297,8 +297,8 @@ public class Devices {
         emic2.Msg(9);
 
         hmc = new HMC5883LDevice();
-        hmc.SetScale(1.3F);
-        hmc.SetMeasurementMode(HMC5883LDevice.Measurement.Continuous);
+        hmc.setScale(1.3F);
+        hmc.setMeasurementMode(HMC5883LDevice.Measurement.Continuous);
         emic2.Msg(24);
 //TODO Define PIRDevice with pin parameter and move listeners to that
         //Inicialize PIR Left motion detect
